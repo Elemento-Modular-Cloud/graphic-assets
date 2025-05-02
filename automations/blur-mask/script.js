@@ -153,7 +153,7 @@ $(document).ready(function() {
   // Download handler
   $('#download-btn').on('click', function() {
     const canvas = document.getElementById('main-canvas');
-    const format = $('#download-format').val(); // Get selected format
+    const format = $('input[name="download-format"]:checked').val();
     let mimeType = 'image/png';
     let extension = 'png';
 

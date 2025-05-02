@@ -13,26 +13,35 @@
   <div class="settings-box">
     <label for="mask-select">Select a mask:</label>
     <select id="maskSelector">
-        <option value="Asset 1.svg">Asset 1</option>
-        <option value="Asset 2.svg">Asset 2</option>
-        <option value="Asset 3.svg">Asset 3</option>
-        <option value="Asset 4.svg">Asset 4</option>
-        <option value="Asset 5.svg">Asset 5</option>
-        <option value="Asset 6.svg">Asset 6</option>
-        <option value="Asset 7.svg">Asset 7</option>
-        <option value="Asset 8.svg">Asset 8</option>
-        <option value="Asset 9.svg">Asset 9</option>
-        <option value="Asset 10.svg">Asset 10</option>
-        <option value="Asset 11.svg">Asset 11</option>
+        <option value="Asset 1.svg">Mask 1</option>
+        <option value="Asset 2.svg">Mask 2</option>
+        <option value="Asset 3.svg">Mask 3</option>
+        <option value="Asset 4.svg">Mask 4</option>
+        <option value="Asset 5.svg">Mask 5</option>
+        <option value="Asset 6.svg">Mask 6</option>
+        <option value="Asset 7.svg">Mask 7</option>
+        <option value="Asset 8.svg">Mask 8</option>
+        <option value="Asset 9.svg">Mask 9</option>
+        <option value="Asset 10.svg">Mask 10</option>
+        <option value="Asset 11.svg">Mask 11</option>
     </select>
 
     <label for="image-upload" class="custom-file-label">Choose Image</label>
     <input type="file" id="image-upload" style="display:none;" />
-    <select id="download-format">
-      <option value="png">PNG</option>
-      <option value="jpeg">JPEG</option>
-      <option value="webp">WebP</option>
-    </select>
+    <div id="download-format">
+      <label>
+        <input type="radio" name="download-format" value="png" checked>
+        PNG
+      </label>
+      <label>
+        <input type="radio" name="download-format" value="jpeg">
+        JPEG
+      </label>
+      <label>
+        <input type="radio" name="download-format" value="webp">
+        WebP
+      </label>
+    </div>
     <button id="download-btn">Download</button>
   </div>
   <div class="container">
