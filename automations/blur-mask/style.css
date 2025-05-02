@@ -6,6 +6,10 @@ body, html {
     height: 100%;
     overflow: hidden;
     font-family: 'Red Hat Display', Arial, sans-serif;
+    background-color: rgba(34, 34, 38, 0.98);
+}
+.container {
+    display: none;
 }
 .background-image {
     background-image: url('example-image.jpg');
@@ -94,6 +98,28 @@ body, html {
 
 .settings-box .custom-file-label:hover,
 .settings-box .custom-file-label:focus {
+    background: #50556a;
+    border-color: #888;
+}
+
+#download-btn {
+    display: inline-block;
+    padding: 10px 22px;
+    background: #3a3f4b;
+    color: #f7f7f7;
+    border-radius: 6px;
+    border: 1px solid #444;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border 0.2s;
+    margin-top: 8px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+#download-btn:hover,
+#download-btn:focus {
     background: #50556a;
     border-color: #888;
 }

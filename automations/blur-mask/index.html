@@ -28,11 +28,22 @@
 
     <label for="image-upload" class="custom-file-label">Choose Image</label>
     <input type="file" id="image-upload" style="display:none;" />
-    <button id="download-btn">Download 4K Image</button>
+    <select id="download-format">
+      <option value="png">PNG</option>
+      <option value="jpeg">JPEG</option>
+      <option value="webp">WebP</option>
+    </select>
+    <button id="download-btn">Download</button>
   </div>
   <div class="container">
     <div class="background-image"></div>
     <div class="blur-mask"></div>
   </div>
+  <canvas
+    id="main-canvas"
+    width="3840"
+    height="2160"
+    style="border:1px solid #ccc; width:100%; height:auto;">
+  </canvas>
 </body>
 </html>
