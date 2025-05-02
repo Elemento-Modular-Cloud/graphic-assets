@@ -44,7 +44,14 @@ $(document).ready(function() {
   // Helper: Load SVG as an image and get preserveAspectRatio
   function loadSVGMask(maskPath, callback) {
     fetch(maskPath)
-      .then(response => response.text())
+      .then(response => {
+        if (!response.ok) {
+          // Mask file not found
+          alert(`Mask file not found: ${maskPath}`);
+          throw new Error(`Mask file not found: ${maskPath}`);
+        }
+        return response.text();
+      })
       .then(svgText => {
         // Parse SVG to get preserveAspectRatio
         const parser = new DOMParser();
@@ -58,6 +65,10 @@ $(document).ready(function() {
         img.onload = function() {
           callback(img, preserveAspectRatio, svgElem);
         };
+      })
+      .catch(error => {
+        // Optionally handle the error further here
+        console.error(error);
       });
   }
 
