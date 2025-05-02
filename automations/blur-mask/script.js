@@ -76,7 +76,7 @@ $(document).ready(function() {
   function applyBlurWithInverseMask() {
     const canvas = document.getElementById('main-canvas');
     const ctx = canvas.getContext('2d');
-    const selectedMask = "masks/" + $('#maskSelector').val();
+    const selectedMask = "./masks/" + $('#maskSelector').val();
 
     // Draw the original image to the canvas first
     ctx.clearRect(0, 0, canvas.width, canvas.height);
