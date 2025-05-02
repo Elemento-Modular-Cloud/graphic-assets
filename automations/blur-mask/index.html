@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Image</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+  <div class="settings-box">
+    <label for="mask-select">Select a mask:</label>
+    <select id="maskSelector">
+        <option value="Asset 1.svg">Asset 1</option>
+        <option value="Asset 2.svg">Asset 2</option>
+        <option value="Asset 3.svg">Asset 3</option>
+        <option value="Asset 4.svg">Asset 4</option>
+        <option value="Asset 5.svg">Asset 5</option>
+        <option value="Asset 6.svg">Asset 6</option>
+        <option value="Asset 7.svg">Asset 7</option>
+        <option value="Asset 8.svg">Asset 8</option>
+        <option value="Asset 9.svg">Asset 9</option>
+        <option value="Asset 10.svg">Asset 10</option>
+        <option value="Asset 11.svg">Asset 11</option>
+    </select>
+
+    <label for="image-upload" class="custom-file-label">Choose Image</label>
+    <input type="file" id="image-upload" style="display:none;" />
+    <button id="download-btn">Download 4K Image</button>
+  </div>
+  <div class="container">
+    <div class="background-image"></div>
+    <div class="blur-mask"></div>
+  </div>
+</body>
+</html>

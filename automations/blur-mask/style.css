@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;700&display=swap');
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Red Hat Display', Arial, sans-serif;
+}
+.background-image {
+    background-image: url('example-image.jpg');
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 100vh;
+}
+.blur-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    backdrop-filter: blur(10px) saturate(80%) brightness(1.1);
+    mask-image: url('masks/Asset 4.svg');
+    -webkit-mask-image: url('masks/Asset 4.svg');
+    mask-mode: alpha;
+    mask-size: 100vw 100vh;
+    mask-repeat: no-repeat;
+    mask-position: center;
+}
+
+.settings-box {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: rgba(34, 34, 38, 0.98);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.32);
+    padding: 24px 20px 20px 20px;
+    min-width: 260px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    font-family: 'Red Hat Display', Arial, sans-serif;
+    color: #f7f7f7;
+}
+
+.settings-box label {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #e0e0e0;
+}
+
+.settings-box select,
+.settings-box input[type="file"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #444;
+    border-radius: 6px;
+    font-size: 15px;
+    background: #23272f;
+    color: #f7f7f7;
+    margin-bottom: 10px;
+    transition: border 0.2s;
+}
+
+.settings-box select:focus,
+.settings-box input[type="file"]:focus {
+    border-color: #888;
+    outline: none;
+}
+
+.settings-box input[type="file"] {
+    display: none;
+}
+
+.settings-box .custom-file-label {
+    display: inline-block;
+    padding: 8px 18px;
+    background: #3a3f4b;
+    color: #f7f7f7;
+    border-radius: 6px;
+    border: 1px solid #444;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, border 0.2s;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.settings-box .custom-file-label:hover,
+.settings-box .custom-file-label:focus {
+    background: #50556a;
+    border-color: #888;
+}
