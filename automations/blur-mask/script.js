@@ -1,6 +1,7 @@
 $(document).ready(function() {
   // Global variable to store the original image
   let originalImage = new Image();
+  let originalImageName = 'example-image'; // default name
 
   // Draw default image in canvas on load
   const canvas = document.getElementById('main-canvas');
@@ -22,6 +23,8 @@ $(document).ready(function() {
   $('#image-upload').on('change', function(event) {
     const file = event.target.files[0];
     if (!file) return;
+    // Store the original file name (without extension)
+    originalImageName = file.name.replace(/\.[^/.]+$/, "");
     const reader = new FileReader();
     reader.onload = function(e) {
       const img = new Image();
@@ -162,8 +165,10 @@ $(document).ready(function() {
       extension = 'webp';
     }
 
+    const maskValue = $('#maskSelector').val();
+    const maskName = maskValue.replace(/\.[^/.]+$/, "");
     const link = document.createElement('a');
-    link.download = `blurred-image.${extension}`;
+    link.download = `${originalImageName}__${maskName}.${extension}`;
     link.href = canvas.toDataURL(mimeType);
     link.click();
   });
