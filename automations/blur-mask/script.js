@@ -61,7 +61,12 @@ $(document).ready(function() {
 
         // Create image for drawing
         const img = new Image();
-        img.src = 'data:image/svg+xml;base64,' + btoa(svgText);
+        function base64EncodeUnicode(str) {
+          return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+            return String.fromCharCode('0x' + p1);
+          }));
+        }
+        img.src = 'data:image/svg+xml;base64,' + base64EncodeUnicode(svgText);
         img.onload = function() {
           callback(img, preserveAspectRatio, svgElem);
         };
