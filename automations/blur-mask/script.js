@@ -3,6 +3,12 @@ $(document).ready(function() {
   let originalImage = new Image();
   let originalImageName = 'example-image'; // default name
 
+  // Add these variables at the top with other global variables
+  let blurAmount = 10;
+  let saturationAmount = 80;
+  let brightnessAmount = 110;
+  let invertMask = false; // Add this new variable
+
   // Draw default image in canvas on load
   const canvas = document.getElementById('main-canvas');
   const ctx = canvas.getContext('2d');
@@ -61,12 +67,7 @@ $(document).ready(function() {
 
         // Create image for drawing
         const img = new Image();
-        function base64EncodeUnicode(str) {
-          return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
-            return String.fromCharCode('0x' + p1);
-          }));
-        }
-        img.src = 'data:image/svg+xml;base64,' + base64EncodeUnicode(svgText);
+        img.src = 'data:image/svg+xml;base64,' + btoa(svgText);
         img.onload = function() {
           callback(img, preserveAspectRatio, svgElem);
         };
@@ -77,11 +78,21 @@ $(document).ready(function() {
       });
   }
 
+  // Add this new function to update the filter
+  function updateFilter() {
+    blurAmount = $('#blur-slider').val();
+    saturationAmount = $('#saturation-slider').val();
+    brightnessAmount = $('#brightness-slider').val();
+    invertMask = $('#invert-mask').is(':checked'); // Add this line
+    applyBlurWithInverseMask();
+  }
+
   // Apply blur with inverse mask
   function applyBlurWithInverseMask() {
     const canvas = document.getElementById('main-canvas');
     const ctx = canvas.getContext('2d');
-    const selectedMask = "./masks/" + $('#maskSelector').val();    const maskPath = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/') + "masks/" + $('#maskSelector').val();
+    const selectedMask = "./masks/" + $('#maskSelector').val();
+    const maskPath = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/') + "masks/" + $('#maskSelector').val();
     console.log("Selected Mask Path:", maskPath);
 
     // Draw the original image to the canvas first
@@ -94,7 +105,7 @@ $(document).ready(function() {
     offCanvas.height = canvas.height;
     const offCtx = offCanvas.getContext('2d');
     offCtx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
-    offCtx.filter = 'blur(10px) saturate(80%) brightness(1.1)';
+    offCtx.filter = `blur(${blurAmount}px) saturate(${saturationAmount}%) brightness(${brightnessAmount}%)`;
     offCtx.drawImage(offCanvas, 0, 0, canvas.width, canvas.height);
     offCtx.filter = 'none';
 
@@ -150,8 +161,8 @@ $(document).ready(function() {
       // Draw the blurred image
       blurMaskedCtx.drawImage(offCanvas, 0, 0, canvas.width, canvas.height);
 
-      // Use the inverted mask as an alpha mask
-      blurMaskedCtx.globalCompositeOperation = 'destination-in';
+      // Use the mask as an alpha mask (inverted or not based on the toggle)
+      blurMaskedCtx.globalCompositeOperation = invertMask ? 'destination-out' : 'destination-in';
       blurMaskedCtx.drawImage(maskCanvas, 0, 0, canvas.width, canvas.height);
       blurMaskedCtx.globalCompositeOperation = 'source-over';
 
@@ -165,9 +176,15 @@ $(document).ready(function() {
     applyBlurWithInverseMask();
   });
 
+  // Add event listeners for the sliders
+  $('#blur-slider, #saturation-slider, #brightness-slider').on('input', updateFilter);
+
+  // Add event listener for the invert mask checkbox
+  $('#invert-mask').on('change', updateFilter);
+
   // Optionally, call applyBlurWithInverseMask() after image upload as well
 
-  // Download handler
+  // Download handler for direct download
   $('#download-btn').on('click', function() {
     const canvas = document.getElementById('main-canvas');
     const format = $('input[name="download-format"]:checked').val();
@@ -184,10 +201,106 @@ $(document).ready(function() {
 
     const maskValue = $('#maskSelector').val();
     const maskName = maskValue.replace(/\.[^/.]+$/, "");
+    
+    // Create a settings string that encodes the filter values
+    const settingsString = `b${blurAmount}s${saturationAmount}br${brightnessAmount}`;
+    
+    const fileName = `${originalImageName}__${maskName}__${settingsString}.${extension}`;
+    
     const link = document.createElement('a');
-    link.download = `${originalImageName}__${maskName}.${extension}`;
+    link.download = fileName;
     link.href = canvas.toDataURL(mimeType);
     link.click();
+  });
+
+  // Save As handler with native dialog
+  $('#save-as-btn').on('click', async function() {
+    try {
+      const canvas = document.getElementById('main-canvas');
+      const format = $('input[name="download-format"]:checked').val();
+      let mimeType = 'image/png';
+      let extension = 'png';
+
+      if (format === 'jpeg') {
+        mimeType = 'image/jpeg';
+        extension = 'jpg';
+      } else if (format === 'webp') {
+        mimeType = 'image/webp';
+        extension = 'webp';
+      }
+
+      const maskValue = $('#maskSelector').val();
+      const maskName = maskValue.replace(/\.[^/.]+$/, "");
+      
+      // Create a settings string that encodes the filter values
+      const settingsString = `b${blurAmount}s${saturationAmount}br${brightnessAmount}`;
+      
+      const fileName = `${originalImageName}__${maskName}__${settingsString}.${extension}`;
+
+      // Show the native save dialog
+      const handle = await window.showSaveFilePicker({
+        suggestedName: fileName,
+        types: [{
+          description: 'Image file',
+          accept: {
+            [mimeType]: [`.${extension}`]
+          }
+        }]
+      });
+
+      // Convert canvas to blob
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, mimeType));
+      
+      // Create a FileSystemWritableFileStream to write to
+      const writable = await handle.createWritable();
+      
+      // Write the blob to the file
+      await writable.write(blob);
+      
+      // Close the file
+      await writable.close();
+    } catch (err) {
+      // If the user cancels the save dialog or if the API is not supported
+      console.error('Error saving file:', err);
+      // Fallback to the old method if the new API fails
+      const link = document.createElement('a');
+      link.download = fileName;
+      link.href = canvas.toDataURL(mimeType);
+      link.click();
+    }
+  });
+
+  // Reset handler
+  $('#reset-btn').on('click', function() {
+    // Reset sliders to default values
+    $('#blur-slider').val(10);
+    $('#saturation-slider').val(80);
+    $('#brightness-slider').val(110);
+    $('#invert-mask').prop('checked', false);
+    
+    // Update the display values
+    $('#blur-value').text('10px');
+    $('#saturation-value').text('80%');
+    $('#brightness-value').text('110%');
+    
+    // Reset the first mask option
+    $('#maskSelector').val('Asset 1.svg');
+    
+    // Apply the reset values
+    updateFilter();
+  });
+
+  // Add this inside the document.ready function
+  $('#blur-slider').on('input', function() {
+    $('#blur-value').text($(this).val() + 'px');
+  });
+
+  $('#saturation-slider').on('input', function() {
+    $('#saturation-value').text($(this).val() + '%');
+  });
+
+  $('#brightness-slider').on('input', function() {
+    $('#brightness-value').text($(this).val() + '%');
   });
 });
 

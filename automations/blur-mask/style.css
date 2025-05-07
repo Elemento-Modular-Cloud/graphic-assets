@@ -102,7 +102,7 @@ body, html {
     border-color: #888;
 }
 
-#download-btn {
+button {
     display: inline-block;
     padding: 10px 22px;
     background: #3a3f4b;
@@ -118,8 +118,8 @@ body, html {
     box-shadow: 0 2px 8px rgba(0,0,0,0.10);
 }
 
-#download-btn:hover,
-#download-btn:focus {
+button:hover,
+button:focus {
     background: #50556a;
     border-color: #888;
 }
@@ -183,4 +183,26 @@ body, html {
 #download-format input[type="radio"]:focus {
     border-color: #888;
     box-shadow: 0 0 0 2px #888;
+}
+
+.settings-box .filter-controls {
+  margin: 15px 0;
+  padding: 10px;
+  /* background: #f8f8f8; */
+  border-radius: 4px;
+}
+
+.settings-box .slider-container {
+  margin: 10px 0;
+}
+
+.settings-box .slider-container label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.settings-box input[type="range"] {
+  width: 100%;
+  margin: 5px 0;
 }

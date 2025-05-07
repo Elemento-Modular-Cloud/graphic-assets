@@ -28,6 +28,30 @@
 
     <label for="image-upload" class="custom-file-label">Choose Image</label>
     <input type="file" id="image-upload" style="display:none;" />
+
+    <div class="filter-controls">
+      <div class="slider-container">
+        <label for="blur-slider">Blur: <span id="blur-value">10px</span></label>
+        <input type="range" id="blur-slider" min="0" max="50" value="10" step="1">
+      </div>
+      
+      <div class="slider-container">
+        <label for="saturation-slider">Saturation: <span id="saturation-value">80%</span></label>
+        <input type="range" id="saturation-slider" min="0" max="200" value="80" step="5">
+      </div>
+      
+      <div class="slider-container">
+        <label for="brightness-slider">Brightness: <span id="brightness-value">110%</span></label>
+        <input type="range" id="brightness-slider" min="0" max="200" value="110" step="5">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>
+        <input type="checkbox" id="invert-mask"> Invert Mask
+      </label>
+    </div>
+
     <div id="download-format">
       <label>
         <input type="radio" name="download-format" value="png" checked>
@@ -42,7 +66,9 @@
         WebP
       </label>
     </div>
+    <button id="reset-btn">Reset</button>
     <button id="download-btn">Download</button>
+    <button id="save-as-btn">Save As...</button>
   </div>
   <div class="container">
     <div class="background-image"></div>
