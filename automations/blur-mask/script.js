@@ -8,6 +8,8 @@ $(document).ready(function() {
   let saturationAmount = 80;
   let brightnessAmount = 110;
   let invertMask = false; // Add this new variable
+  let flipHorizontal = false;
+  let maskScale = 100; // Add this new variable for mask scaling (in percentage)
 
   // Draw default image in canvas on load
   const canvas = document.getElementById('main-canvas');
@@ -83,7 +85,9 @@ $(document).ready(function() {
     blurAmount = $('#blur-slider').val();
     saturationAmount = $('#saturation-slider').val();
     brightnessAmount = $('#brightness-slider').val();
-    invertMask = $('#invert-mask').is(':checked'); // Add this line
+    invertMask = $('#invert-mask').is(':checked');
+    flipHorizontal = $('#flip-horizontal').is(':checked');
+    maskScale = $('#mask-scale-slider').val();
     applyBlurWithInverseMask();
   }
 
@@ -97,14 +101,30 @@ $(document).ready(function() {
 
     // Draw the original image to the canvas first
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+    if (flipHorizontal) {
+        ctx.save();
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+        ctx.restore();
+    } else {
+        ctx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+    }
 
     // Create an offscreen canvas for the blurred image
     const offCanvas = document.createElement('canvas');
     offCanvas.width = canvas.width;
     offCanvas.height = canvas.height;
     const offCtx = offCanvas.getContext('2d');
-    offCtx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+    if (flipHorizontal) {
+        offCtx.save();
+        offCtx.translate(canvas.width, 0);
+        offCtx.scale(-1, 1);
+        offCtx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+        offCtx.restore();
+    } else {
+        offCtx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+    }
     offCtx.filter = `blur(${blurAmount}px) saturate(${saturationAmount}%) brightness(${brightnessAmount}%)`;
     offCtx.drawImage(offCanvas, 0, 0, canvas.width, canvas.height);
     offCtx.filter = 'none';
@@ -128,27 +148,32 @@ $(document).ready(function() {
       }
 
       if (preserveAspectRatio === 'none') {
-        // Stretch to fill canvas
-        maskCtx.drawImage(maskImg, 0, 0, canvas.width, canvas.height);
+        // Stretch to fill canvas with scaling
+        const scaledWidth = canvas.width * (maskScale / 100);
+        const scaledHeight = canvas.height * (maskScale / 100);
+        const offsetX = (canvas.width - scaledWidth) / 2;
+        const offsetY = (canvas.height - scaledHeight) / 2;
+        maskCtx.drawImage(maskImg, offsetX, offsetY, scaledWidth, scaledHeight);
       } else {
-        // Maintain aspect ratio
+        // Maintain aspect ratio with scaling
         const canvasAspect = canvas.width / canvas.height;
         const svgAspect = svgWidth / svgHeight;
         let drawWidth, drawHeight, offsetX, offsetY;
 
         if (svgAspect > canvasAspect) {
           // SVG is wider than canvas
-          drawWidth = canvas.width;
-          drawHeight = canvas.width / svgAspect;
-          offsetX = 0;
-          offsetY = (canvas.height - drawHeight) / 2;
+          drawWidth = canvas.width * (maskScale / 100);
+          drawHeight = drawWidth / svgAspect;
         } else {
           // SVG is taller than canvas
-          drawHeight = canvas.height;
-          drawWidth = canvas.height * svgAspect;
-          offsetX = (canvas.width - drawWidth) / 2;
-          offsetY = 0;
+          drawHeight = canvas.height * (maskScale / 100);
+          drawWidth = drawHeight * svgAspect;
         }
+        
+        // Center the mask regardless of its size
+        offsetX = (canvas.width - drawWidth) / 2;
+        offsetY = (canvas.height - drawHeight) / 2;
+        
         maskCtx.drawImage(maskImg, offsetX, offsetY, drawWidth, drawHeight);
       }
 
@@ -181,6 +206,15 @@ $(document).ready(function() {
 
   // Add event listener for the invert mask checkbox
   $('#invert-mask').on('change', updateFilter);
+
+  // Add event listener for the flip horizontal checkbox
+  $('#flip-horizontal').on('change', updateFilter);
+
+  // Add event listener for the mask scale slider
+  $('#mask-scale-slider').on('input', function() {
+    $('#mask-scale-value').text($(this).val() + '%');
+    updateFilter();
+  });
 
   // Optionally, call applyBlurWithInverseMask() after image upload as well
 
@@ -277,6 +311,9 @@ $(document).ready(function() {
     $('#saturation-slider').val(80);
     $('#brightness-slider').val(110);
     $('#invert-mask').prop('checked', false);
+    $('#flip-horizontal').prop('checked', false);
+    $('#mask-scale-slider').val(100);
+    $('#mask-scale-value').text('100%');
     
     // Update the display values
     $('#blur-value').text('10px');

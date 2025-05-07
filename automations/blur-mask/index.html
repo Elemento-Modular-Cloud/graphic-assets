@@ -44,11 +44,20 @@
         <label for="brightness-slider">Brightness: <span id="brightness-value">110%</span></label>
         <input type="range" id="brightness-slider" min="0" max="200" value="110" step="5">
       </div>
+
+      <div class="slider-container">
+        <label for="mask-scale-slider">Mask Scale:</label>
+        <input type="range" id="mask-scale-slider" min="10" max="200" value="100" step="1">
+        <span id="mask-scale-value">100%</span>
+      </div>
     </div>
 
     <div class="form-group">
       <label>
         <input type="checkbox" id="invert-mask"> Invert Mask
+      </label>
+      <label>
+        <input type="checkbox" id="flip-horizontal"> Flip Horizontally
       </label>
     </div>
 
