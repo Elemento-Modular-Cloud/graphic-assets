@@ -341,3 +341,13 @@ $(document).ready(function() {
   });
 });
 
+// Add this at the beginning of your script.js file
+document.addEventListener('DOMContentLoaded', function() {
+  const toggleBtn = document.getElementById('toggle-settings');
+  const settingsBox = document.querySelector('.settings-box');
+  
+  toggleBtn.addEventListener('click', function() {
+    console.log("Toggle button clicked");
+      settingsBox.classList.toggle('collapsed');
+  });
+});
